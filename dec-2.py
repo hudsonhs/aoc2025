@@ -15,21 +15,21 @@ def timer_func(func):
 def main():
     file = open('inputs/dec-2-1')
     rawInput = file.read()
-    intervals = rawInput.split(',')
-    print(getAllRangesSumsInParallel(intervals))
+    ranges = rawInput.split(',')
+    print(getAllRangeSumsInParallel(ranges))
 
 @timer_func
-def getAllRangesSumsInParallel(ranges: list) -> int:
+def getAllRangeSumsInParallel(ranges: list) -> int:
     with ProcessPoolExecutor() as executor:
         invalidIdsInRanges = executor.map(getRangeSum, ranges)
     return sum(invalidIdsInRanges)
 
-def getRangeSum(interval: str) -> int:
+def getRangeSum(range_str: str) -> int:
     res = 0
-    intervalMin, intervalMax = interval.split('-')
-    intervalMin, intervalMax = int(intervalMin), int(intervalMax)
+    rangeMin, rangeMax = range_str.split('-')
+    rangeMin, rangeMax = int(rangeMin), int(rangeMax)
     # Each call to isInvalid is so fast that parallelizing without chunking doesn't speed this up
-    for x in range(intervalMin, intervalMax+1):
+    for x in range(rangeMin, rangeMax + 1):
         if isInvalid(x):
             res += x
     return res
@@ -42,7 +42,7 @@ def isInvalid(n: int) -> bool:
         if len(numAsString) % patternSize != 0:
             continue
         pattern = numAsString[:patternSize]
-        if numAsString == pattern * (len(numAsString)//patternSize):
+        if numAsString == pattern * (len(numAsString) // patternSize):
             return True
     return False
 
