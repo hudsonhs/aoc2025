@@ -1,4 +1,5 @@
 from time import time
+from concurrent.futures import ProcessPoolExecutor
 
 def timer_func(func):
     # This function shows the execution time of 
@@ -17,7 +18,7 @@ def main():
     file = open('inputs/dec-2-1')
     rawInput = file.read()
     intervals = rawInput.split(',')
-    print(getInvalidIdSum(intervals))
+    print(getInvalidIdSumParallel(intervals))
 
 def getInvalidIdSum(intervals: list) -> int:
     res = 0
@@ -25,6 +26,12 @@ def getInvalidIdSum(intervals: list) -> int:
         # should be able to parallelize this since it's just addition
         res += getInvalidIdSumInRange(interval)
     return res
+
+def getInvalidIdSumParallel(intervals: list) -> int:
+    with ProcessPoolExecutor() as executor:
+        # should be able to parallelize this since it's just addition
+        invalidIdsInRanges = executor.map(getInvalidIdSumInRange, intervals)
+    return sum(invalidIdsInRanges)
 
 def getInvalidIdSumInRange(interval: str) -> int:
     res = 0
@@ -57,5 +64,5 @@ def isInvalid(n: int) -> bool:
             return True
     return False
 
-
-main()
+if __name__ == '__main__':
+    main()
