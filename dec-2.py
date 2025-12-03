@@ -75,7 +75,8 @@ def isInvalid(n: int) -> bool:
         if len(numAsString) % patternSize != 0:
             continue
         pattern = numAsString[:patternSize]
-        return numAsString == pattern * (len(numAsString)//patternSize)
+        if numAsString == pattern * (len(numAsString)//patternSize):
+            return True
     return False
 
 if __name__ == '__main__':
