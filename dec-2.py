@@ -18,13 +18,12 @@ def main():
     intervals = rawInput.split(',')
     print(getAllRangesSum(intervals))
     print(getAllRangesSumsInParallel(intervals))
-    print(getEachRangeSumInParallel(intervals))
 
 @timer_func
 def getAllRangesSum(ranges: list) -> int:
     res = 0
-    for range in ranges:
-        res += getRangeSum(range)
+    for range_str in ranges:
+        res += getRangeSum(range_str)
     return res
 
 @timer_func
@@ -35,9 +34,14 @@ def getAllRangesSumsInParallel(ranges: list) -> int:
 
 @timer_func
 def getEachRangeSumInParallel(ranges:list) -> int:
-    res = 0
-    for range in ranges:
-        res += getRangeSumInParallel(range)
+    with ProcessPoolExecutor() as executor:
+        res = 0
+        for range_str in ranges:
+            intervalMin, intervalMax = range_str.split('-')
+            intervalMin, intervalMax = int(intervalMin), int(intervalMax)
+
+            invalidNums = executor.map(numIfInvalid, range(intervalMin, intervalMax + 1))
+            res += sum(invalidNums)
     return res
 
 def getRangeSum(interval: str) -> int:
@@ -58,6 +62,7 @@ def getRangeSumInParallel(interval: str) -> int:
         invalidNums = executor.map(numIfInvalid, range(intervalMin, intervalMax + 1))
     return sum(invalidNums)
 
+# This function takes like a microsecond to complete. Too fast to parallelize without chunking.
 def numIfInvalid(n: int) -> int:
     return n if isInvalid(n) else 0
 
@@ -69,17 +74,8 @@ def isInvalid(n: int) -> bool:
     for patternSize in range(1, (len(numAsString) // 2) + 1):
         if len(numAsString) % patternSize != 0:
             continue
-        l = 0
-        r = patternSize
         pattern = numAsString[:patternSize]
-        while r <= len(numAsString):
-            if numAsString[l:r] == pattern:
-                l += patternSize
-                r += patternSize
-            else:
-                break
-        if l == len(numAsString):
-            return True
+        return numAsString == pattern * (len(numAsString)//patternSize)
     return False
 
 if __name__ == '__main__':
