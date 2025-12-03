@@ -16,15 +16,7 @@ def main():
     file = open('inputs/dec-2-1')
     rawInput = file.read()
     intervals = rawInput.split(',')
-    print(getAllRangesSum(intervals))
     print(getAllRangesSumsInParallel(intervals))
-
-@timer_func
-def getAllRangesSum(ranges: list) -> int:
-    res = 0
-    for range_str in ranges:
-        res += getRangeSum(range_str)
-    return res
 
 @timer_func
 def getAllRangesSumsInParallel(ranges: list) -> int:
@@ -32,45 +24,20 @@ def getAllRangesSumsInParallel(ranges: list) -> int:
         invalidIdsInRanges = executor.map(getRangeSum, ranges)
     return sum(invalidIdsInRanges)
 
-@timer_func
-def getEachRangeSumInParallel(ranges:list) -> int:
-    with ProcessPoolExecutor() as executor:
-        res = 0
-        for range_str in ranges:
-            intervalMin, intervalMax = range_str.split('-')
-            intervalMin, intervalMax = int(intervalMin), int(intervalMax)
-
-            invalidNums = executor.map(numIfInvalid, range(intervalMin, intervalMax + 1))
-            res += sum(invalidNums)
-    return res
-
 def getRangeSum(interval: str) -> int:
     res = 0
     intervalMin, intervalMax = interval.split('-')
     intervalMin, intervalMax = int(intervalMin), int(intervalMax)
-    # we should be able to parallelize the below since it's just addition
+    # Each call to isInvalid is so fast that parallelizing without chunking doesn't speed this up
     for x in range(intervalMin, intervalMax+1):
         if isInvalid(x):
             res += x
     return res
 
-def getRangeSumInParallel(interval: str) -> int:
-    intervalMin, intervalMax = interval.split('-')
-    intervalMin, intervalMax = int(intervalMin), int(intervalMax)
-    # we should be able to parallelize the below since it's just addition
-    with ProcessPoolExecutor() as executor:
-        invalidNums = executor.map(numIfInvalid, range(intervalMin, intervalMax + 1))
-    return sum(invalidNums)
-
-# This function takes like a microsecond to complete. Too fast to parallelize without chunking.
-def numIfInvalid(n: int) -> int:
-    return n if isInvalid(n) else 0
-
 def isInvalid(n: int) -> bool:
     if n < 11:
         return False
     numAsString = str(n)
-    # make a sliding window and iterate over the whole string based on how large the window is
     for patternSize in range(1, (len(numAsString) // 2) + 1):
         if len(numAsString) % patternSize != 0:
             continue
