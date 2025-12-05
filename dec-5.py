@@ -56,3 +56,5 @@ def isInInterval(num: int, interval: list):
 print(getNumIngredientsInRanges('inputs/dec-5'))
 # print(getNumFreshIngredients('inputs/dec-5-test'))
 print(getNumFreshIngredients('inputs/dec-5'))
+
+# Make your own little edge cases in the smaller testing input
