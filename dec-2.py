@@ -1,9 +1,11 @@
-from utils import timer
+from utils import timer, getTodayInputFile
 from concurrent.futures import ProcessPoolExecutor
 
+USE_TEST_INPUT = False
+
 def main():
-    file = open('inputs/dec-2')
-    rawInput = file.read()
+    with getTodayInputFile(USE_TEST_INPUT, 2) as file:
+        rawInput = file.read()
     ranges = rawInput.split(',')
     print(getAllRangeSumsInParallel(ranges))
 

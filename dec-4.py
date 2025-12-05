@@ -1,5 +1,9 @@
+from utils import getTodayInputFile
+
+USE_TEST_INPUT = False
+
 def getNumRemovableRolls():
-    rolls = serializeRolls('inputs/dec-4')
+    rolls = serializeRolls()
     prevRemovableRolls = set()
     res = 0
     currRemovableRolls = getAccessibleRolls(rolls)
@@ -10,9 +14,9 @@ def getNumRemovableRolls():
         currRemovableRolls = getAccessibleRolls(rolls)
     return res
 
-def serializeRolls(path: str) -> list:
+def serializeRolls() -> list:
     rolls = []
-    with open(path) as file:
+    with getTodayInputFile(USE_TEST_INPUT, 4) as file:
         for line in file:
             rolls.append(list(line.strip()))
     return rolls

@@ -13,6 +13,6 @@ def timer(func):
         return result
     return wrap_func
 
-def getTodayInputFile(test: bool):
+def getTodayInputFile(test: bool, day = date.today().day):
     testStr = '-test' if test else ''
-    return Path(f'./inputs/dec-{date.today().day}{testStr}').open()
+    return Path(f'./inputs/dec-{day}{testStr}').open()

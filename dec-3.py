@@ -1,4 +1,6 @@
-from utils import timer
+from utils import timer, getTodayInputFile
+
+USE_TEST_INPUT = False
 
 def main():
     print(getMaxJoltsSum())
@@ -6,10 +8,10 @@ def main():
 @timer
 def getMaxJoltsSum():
     results = []
-    file = open('inputs/dec-3')
-    for line in file:
-        # remove annoying newline character
-        results.append(getMaxJolts2(line.strip()))
+    with getTodayInputFile(USE_TEST_INPUT, 3) as file:
+        for line in file:
+            # remove annoying newline character
+            results.append(getMaxJolts2(line.strip()))
     return sum(results)
 
 def getMaxJolts(line: str) -> int:
