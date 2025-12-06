@@ -4,15 +4,15 @@ import math
 USE_TEST_INPUT = False
 
 def getAnswersSum() -> int:
-    inputMatrix = transformInput(getSplitInput())
+    inputMatrix = transformInput(getParsedInput())
     return sum([getRowAnswer(row) for row in inputMatrix])
 
 def getAnswersSum2() -> int:
-    inputMatrix = getTransformedInput2()
+    inputMatrix = getParsedInput2()
     return sum([getRowAnswer(row) for row in inputMatrix])
 
 
-def getSplitInput() -> list:
+def getParsedInput() -> list:
     res = []
     with getTodayInputFile(USE_TEST_INPUT) as file:
         for line in file:
@@ -39,7 +39,7 @@ def getRowAnswer(row: list) -> int:
         func = math.prod
     return func(row[:-1])
 
-def getTransformedInput2():
+def getParsedInput2() -> list:
     matrix = []
     row = []
     operator = ''
