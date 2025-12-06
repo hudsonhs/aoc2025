@@ -48,7 +48,7 @@ def getParsedInput2() -> list:
         lines = file.readlines()
         lineLen = len(lines[0])
         for col in range(lineLen - 2, -1, -1):
-            number = ''
+            number = 0
             for line in lines:
                 char = line[col]
                 if char.isspace():
@@ -57,17 +57,17 @@ def getParsedInput2() -> list:
                     foundOperator = True
                     operator = char
                     break
-                number += char
+                number = (number * 10) + int(char)
             if foundOperator:
-                row.append(int(number))
+                row.append(number)
                 row.append(operator)
                 matrix.append(row)
                 row = []
                 operator = ''
                 foundOperator = False
             else:
-                if number:
-                    row.append(int(number))
+                if number != 0:
+                    row.append(number)
     return matrix
 
 print(getAnswersSum())
