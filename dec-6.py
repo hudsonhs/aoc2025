@@ -65,7 +65,6 @@ def getParsedInput2() -> list:
                 row = []
                 operator = ''
                 foundOperator = False
-                # skip the next iteration, continue might not be enough here. MIght need to decrease col
             else:
                 if number:
                     row.append(int(number))
