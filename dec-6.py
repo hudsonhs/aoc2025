@@ -4,11 +4,11 @@ import math
 USE_TEST_INPUT = False
 
 def getAnswersSum() -> int:
-    inputMatrix = transformInput(getParsedInput())
+    inputMatrix = getParsedInput()
     return sum([getRowAnswer(row) for row in inputMatrix])
 
 def getAnswersSum2() -> int:
-    inputMatrix = getParsedInput2()
+    inputMatrix = parseZippedInput(zippedStringInput())
     return sum([getRowAnswer(row) for row in inputMatrix])
 
 
@@ -17,27 +17,37 @@ def getParsedInput() -> list:
     with getTodayInputFile(USE_TEST_INPUT) as file:
         for line in file:
             res.append(line.split())
-    return res
-
-def transformInput(matrix: list) -> list:
-    res = []
-    for i in range(len(matrix[0])):
-        row = []
-        for j in range(len(matrix)):
-            char = matrix[j][i]
-            if char.isnumeric():
-                row.append(int(char))
-            else:
-                row.append(char)
-        res.append(row)
-    return res
+    return list(zip(*res))
 
 def getRowAnswer(row: list) -> int:
     if row[-1] == '+':
         func = sum
     elif row[-1] == '*':
         func = math.prod
-    return func(row[:-1])
+    return func([int(num) for num in row[:-1]])
+
+def zippedStringInput() -> list:
+    with getTodayInputFile(USE_TEST_INPUT) as file:
+        lines = file.readlines()
+    separatedInputs = [''.join(tup).strip() for tup in list(zip(*lines))]
+    return separatedInputs
+
+def parseZippedInput(strList: list) -> list:
+    matrix = []
+    currOperator = ''
+    row = []
+    for s in strList:
+        if currOperator == '':
+            currOperator = s[-1]
+            row.append(int(s[:-1]))
+        elif s == '':
+            row.append(currOperator)
+            matrix.append(row)
+            row = []
+            currOperator = ''
+        else:
+            row.append(int(s))
+    return matrix
 
 def getParsedInput2() -> list:
     matrix = []
