@@ -6,7 +6,6 @@ USE_TEST_INPUT = False
 def main():
     graph = getSerializedInput()
     start = (1, graph[0].index('S'))
-    graph[start[0]][start[1]] = 1
     return bfsMarkPaths(graph, start)
 
 def getSerializedInput() -> list:
@@ -38,6 +37,7 @@ def bfs(graph: list, start: tuple) -> int:
 
 def bfsMarkPaths(graph: list, start: tuple) -> int:
     queue = deque([start])
+    graph[start[0]][start[1]] = 1
     visited = set()
     while queue:
         node = queue.popleft()
